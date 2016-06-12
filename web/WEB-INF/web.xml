@@ -3,4 +3,27 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
+    <!--servlet.messages-->
+    <servlet>
+        <servlet-name>Messages</servlet-name>
+        <servlet-class>servlets.message.Messages</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MessagesSave</servlet-name>
+        <servlet-class>servlets.message.MessagesSave</servlet-class>
+    </servlet>
+
+    <!--servlet.messages-->
+    <!--/messages-->
+    <servlet-mapping>
+        <servlet-name>Messages</servlet-name>
+        <url-pattern>/messages</url-pattern>
+    </servlet-mapping>
+    <!--/message_save-->
+    <servlet-mapping>
+        <servlet-name>MessagesSave</servlet-name>
+        <url-pattern>/message_save</url-pattern>
+    </servlet-mapping>
+
 </web-app>
