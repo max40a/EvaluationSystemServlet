@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.sql.*;
 
 /**
  * Created by Retro on 12.06.2016.
@@ -25,33 +26,48 @@ public class Messages extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-        sendMessageForm(response);
-
-
-    }
-
-    public void sendMessageForm(HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         response.setContentType("text/html");
 
         PrintWriter out = response.getWriter();
 
-        File messageForm = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\static\\MessageForm.html");
-        try(BufferedReader reader = new BufferedReader(new FileReader(messageForm))) {
+        try (Connection connection = DriverManager.getConnection(
+                ConfigurationJDBC.DB_ESS_URL.getTitle(),
+                ConfigurationJDBC.USER_NAME.getTitle(),
+                ConfigurationJDBC.USER_PASSWORD.getTitle())) {
 
-            String html = "";
+            String sql = "SELECT message FROM messages";
 
-            int i;
-            while ((i=reader.read()) != -1) {
-                html += (char) i;
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ResultSet resultSet = ps.executeQuery();
+
+            File file = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\static\\MessageForm.html");
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String message = "";
+                while (resultSet.next()) {
+                    message += "<li>"+resultSet.getString("message")+"</li><br>";
+                }
+
+                String html = "";
+
+                int i;
+                while ((i=reader.read()) != -1) {
+                    html += (char) i;
+                }
+
+                html = html.replace("${message}", message);
+
+                out.println(html);
+
+                resultSet.close();
+                ps.close();
             }
 
-            out.println(html);
-
-        }catch (FileNotFoundException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 }

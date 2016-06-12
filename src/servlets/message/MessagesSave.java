@@ -47,7 +47,7 @@ public class MessagesSave extends HttpServlet {
 
             int i = preparedStatement.executeUpdate();
             if(i != 0)
-                System.out.println("Execute Update True");
+                System.out.println("Execute Update Successfully");
 
             preparedStatement.close();
 
