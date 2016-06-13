@@ -13,6 +13,10 @@
         <servlet-name>MessagesSave</servlet-name>
         <servlet-class>servlets.message.MessagesSave</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ForumCategory</servlet-name>
+        <servlet-class>servlets.forum.ForumCategory</servlet-class>
+    </servlet>
 
     <!--servlet.messages-->
     <!--/messages-->
@@ -24,6 +28,11 @@
     <servlet-mapping>
         <servlet-name>MessagesSave</servlet-name>
         <url-pattern>/message_save</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ForumCategory</servlet-name>
+        <url-pattern>/forum_category</url-pattern>
     </servlet-mapping>
 
 </web-app>

@@ -39,7 +39,7 @@ public class MessagesSave extends HttpServlet {
                 ConfigurationJDBC.USER_NAME.getTitle(),
                 ConfigurationJDBC.USER_PASSWORD.getTitle())) {
 
-            String sql = "INSERT INTO messages VALUES (?, 1)";
+            String sql = "INSERT INTO messages VALUES (DEFAULT ,?, 1)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
