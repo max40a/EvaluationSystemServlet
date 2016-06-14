@@ -29,6 +29,7 @@ public class Messages extends HttpServlet {
             throws ServletException, IOException {
 
         String forumId = request.getParameter("forumCategory");
+        Integer forumID = Integer.parseInt(forumId);
 
         response.setContentType("text/html");
 
@@ -39,9 +40,10 @@ public class Messages extends HttpServlet {
                 ConfigurationJDBC.USER_NAME.getTitle(),
                 ConfigurationJDBC.USER_PASSWORD.getTitle())) {
 
-            String sql = "SELECT message FROM messages";
+            String sql = "SELECT message FROM messages WHERE forum_id=?";
 
             PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, forumID);
 
             ResultSet resultSet = ps.executeQuery();
 
