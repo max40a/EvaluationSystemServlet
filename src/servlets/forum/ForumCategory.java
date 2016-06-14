@@ -53,13 +53,15 @@ public class ForumCategory extends HttpServlet {
                     html += (char) i;
                 }
 
-                while(resultSet.next()) {
-                    option += "<option value="+resultSet.getString("id")+">"+resultSet.getString("forum_category")+"</option><br>\n";
+                while (resultSet.next()) {
+                    option += "<option value=" + resultSet.getString("id") + ">" + resultSet.getString("forum_category") + "</option><br>\n";
                 }
 
                 html = html.replace("${option}", option);
 
                 out.println(html);
+
+                preparedStatement.close();
 
             } catch (FileNotFoundException exc) {
                 exc.printStackTrace();
@@ -68,5 +70,44 @@ public class ForumCategory extends HttpServlet {
         } catch (SQLException exc) {
             exc.printStackTrace();
         }
+    }
+
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        createForum(request);
+        doGet(request, response);
+
+    }
+
+    void createForum(HttpServletRequest request)
+            throws ServletException, IOException {
+
+        String forumName = request.getParameter("forumName");
+
+        try (Connection connection = DriverManager.getConnection(
+                ConfigurationJDBC.DB_ESS_URL.getTitle(),
+                ConfigurationJDBC.USER_NAME.getTitle(),
+                ConfigurationJDBC.USER_PASSWORD.getTitle()
+        )) {
+
+            String sql = "INSERT INTO forum_categories VALUES (DEFAULT , ?)";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, forumName);
+            int i = preparedStatement.executeUpdate();
+            if(i!=0) {
+                System.out.println("New Forum Create");
+            }
+
+            preparedStatement.getFetchDirection();
+            preparedStatement.close();
+
+        } catch (SQLException exc) {
+            exc.printStackTrace();
+        }
+
     }
 }
