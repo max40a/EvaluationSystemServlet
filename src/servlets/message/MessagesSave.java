@@ -33,17 +33,19 @@ public class MessagesSave extends HttpServlet {
             throws ServletException, IOException {
 
         String message = request.getParameter("message");
+        Integer forumId = Integer.parseInt(request.getParameter("forumCategory"));
 
         try(Connection connection = DriverManager.getConnection(
                 ConfigurationJDBC.DB_ESS_URL.getTitle(),
                 ConfigurationJDBC.USER_NAME.getTitle(),
                 ConfigurationJDBC.USER_PASSWORD.getTitle())) {
 
-            String sql = "INSERT INTO messages VALUES (DEFAULT ,?, 1)";
+            String sql = "INSERT INTO messages VALUES (DEFAULT ,?, ?)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setString(1, message);
+            preparedStatement.setInt(2, forumId);
 
             int i = preparedStatement.executeUpdate();
             if(i != 0)

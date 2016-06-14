@@ -28,6 +28,8 @@ public class Messages extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        String forumId = request.getParameter("forumCategory");
+
         response.setContentType("text/html");
 
         PrintWriter out = response.getWriter();
@@ -57,6 +59,7 @@ public class Messages extends HttpServlet {
                     html += (char) i;
                 }
 
+                html = html.replace("${forumId}", forumId);
                 html = html.replace("${message}", message);
 
                 out.println(html);

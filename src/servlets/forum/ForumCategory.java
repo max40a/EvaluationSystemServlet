@@ -40,7 +40,7 @@ public class ForumCategory extends HttpServlet {
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            ResultSet resultSet = preparedStatement.executeQuery(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             File form = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\static\\ForumCategory.html");
             try (BufferedReader reader = new BufferedReader(new FileReader(form))) {
@@ -54,7 +54,7 @@ public class ForumCategory extends HttpServlet {
                 }
 
                 while(resultSet.next()) {
-                    option += "<option value="+resultSet.getString("id")+"> "+resultSet.getString("forum_category")+"</option><br>";
+                    option += "<option value="+resultSet.getString("id")+">"+resultSet.getString("forum_category")+"</option><br>\n";
                 }
 
                 html = html.replace("${option}", option);
