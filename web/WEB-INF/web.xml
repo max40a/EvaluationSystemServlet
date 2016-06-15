@@ -10,35 +10,44 @@
         <listener-class>configurations.JdbcDriverLoadContextServlet</listener-class>
     </listener>
 
-    <!--servlet.messages-->
+    <!-- Messages : /messages -->
     <servlet>
         <servlet-name>Messages</servlet-name>
         <servlet-class>servlets.message.Messages</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>MessagesSave</servlet-name>
-        <servlet-class>servlets.message.MessagesSave</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ForumCategory</servlet-name>
-        <servlet-class>servlets.forum.ForumCategory</servlet-class>
-    </servlet>
-
-    <!--servlet.messages-->
-    <!--/messages-->
     <servlet-mapping>
         <servlet-name>Messages</servlet-name>
         <url-pattern>/messages</url-pattern>
     </servlet-mapping>
-    <!--/message_save-->
+
+    <!-- MessageSave : /message_save -->
+    <servlet>
+        <servlet-name>MessagesSave</servlet-name>
+        <servlet-class>servlets.message.MessagesSave</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MessagesSave</servlet-name>
         <url-pattern>/message_save</url-pattern>
     </servlet-mapping>
-    <!--/forum_category -->
+
+    <!-- ForumCategory : /forum_category -->
+    <servlet>
+        <servlet-name>ForumCategory</servlet-name>
+        <servlet-class>servlets.forum.ForumCategory</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ForumCategory</servlet-name>
         <url-pattern>/forum_category</url-pattern>
+    </servlet-mapping>
+
+    <!-- LoginPage : /login_page -->
+    <servlet>
+        <servlet-name>LoginPage</servlet-name>
+        <servlet-class>servlets.login.LoginPage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginPage</servlet-name>
+        <url-pattern>/login_page</url-pattern>
     </servlet-mapping>
 
 </web-app>
