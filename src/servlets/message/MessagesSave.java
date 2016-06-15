@@ -3,6 +3,7 @@ package servlets.message;
 import configurations.ConfigurationJDBC;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,24 +20,17 @@ import java.sql.SQLException;
 public class MessagesSave extends HttpServlet {
 
     @Override
-    public void init() {
-        try {
-            Class.forName(ConfigurationJDBC.JDBC_DRIVER);
-            System.out.println("JDBC Message Load");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        ServletContext servletContext = getServletContext();
+        String dbURL = (String) servletContext.getAttribute("dbEssURL");
 
         String message = request.getParameter("message");
         Integer forumId = Integer.parseInt(request.getParameter("forumCategory"));
 
         try(Connection connection = DriverManager.getConnection(
-                ConfigurationJDBC.DB_ESS_URL,
+                dbURL,
                 ConfigurationJDBC.USER_NAME,
                 ConfigurationJDBC.USER_PASSWORD)) {
 

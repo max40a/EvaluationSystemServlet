@@ -2,6 +2,7 @@ package servlets.forum;
 
 import configurations.ConfigurationJDBC;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,24 +15,18 @@ import java.sql.*;
  */
 public class ForumCategory extends HttpServlet {
 
-    public void init() {
-        try {
-            Class.forName(ConfigurationJDBC.JDBC_DRIVER);
-            System.out.println("JDBC ForumCategory Load.");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        ServletContext servletContext = getServletContext();
+        String dbURL = (String) servletContext.getAttribute("dbEssURL");
 
         response.setContentType("text/html");
 
         PrintWriter out = response.getWriter();
 
         try (Connection connection = DriverManager.getConnection(
-                ConfigurationJDBC.DB_ESS_URL,
+                dbURL,
                 ConfigurationJDBC.USER_NAME,
                 ConfigurationJDBC.USER_PASSWORD
         )) {
@@ -84,10 +79,13 @@ public class ForumCategory extends HttpServlet {
     void createForum(HttpServletRequest request)
             throws ServletException, IOException {
 
+        ServletContext servletContext = getServletContext();
+        String dbURL = (String) servletContext.getAttribute("dbEssURL");
+
         String forumName = request.getParameter("forumName");
 
         try (Connection connection = DriverManager.getConnection(
-                ConfigurationJDBC.DB_ESS_URL,
+                dbURL,
                 ConfigurationJDBC.USER_NAME,
                 ConfigurationJDBC.USER_PASSWORD
         )) {

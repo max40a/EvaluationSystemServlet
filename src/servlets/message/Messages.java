@@ -2,6 +2,7 @@ package servlets.message;
 
 import configurations.ConfigurationJDBC;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,18 +16,11 @@ import java.sql.*;
 public class Messages extends HttpServlet {
 
     @Override
-    public void init() {
-        try {
-            Class.forName(ConfigurationJDBC.JDBC_DRIVER);
-            System.out.println("JDBC Message Load");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        ServletContext servletContext = getServletContext();
+        String dbURL = (String) servletContext.getAttribute("dbEssURL");
 
         String forumId = request.getParameter("forumCategory");
         Integer forumID = Integer.parseInt(forumId);
@@ -36,7 +30,7 @@ public class Messages extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try (Connection connection = DriverManager.getConnection(
-                ConfigurationJDBC.DB_ESS_URL,
+                dbURL,
                 ConfigurationJDBC.USER_NAME,
                 ConfigurationJDBC.USER_PASSWORD)) {
 
@@ -51,13 +45,13 @@ public class Messages extends HttpServlet {
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String message = "";
                 while (resultSet.next()) {
-                    message += "<li>"+resultSet.getString("message")+"</li><br>";
+                    message += "<li>" + resultSet.getString("message") + "</li><br>";
                 }
 
                 String html = "";
 
                 int i;
-                while ((i=reader.read()) != -1) {
+                while ((i = reader.read()) != -1) {
                     html += (char) i;
                 }
 
