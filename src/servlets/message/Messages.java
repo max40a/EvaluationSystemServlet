@@ -17,7 +17,7 @@ public class Messages extends HttpServlet {
     @Override
     public void init() {
         try {
-            Class.forName(ConfigurationJDBC.JDBC_DRIVER.getTitle());
+            Class.forName(ConfigurationJDBC.JDBC_DRIVER);
             System.out.println("JDBC Message Load");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -36,9 +36,9 @@ public class Messages extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try (Connection connection = DriverManager.getConnection(
-                ConfigurationJDBC.DB_ESS_URL.getTitle(),
-                ConfigurationJDBC.USER_NAME.getTitle(),
-                ConfigurationJDBC.USER_PASSWORD.getTitle())) {
+                ConfigurationJDBC.DB_ESS_URL,
+                ConfigurationJDBC.USER_NAME,
+                ConfigurationJDBC.USER_PASSWORD)) {
 
             String sql = "SELECT message FROM messages WHERE forum_id=?";
 
