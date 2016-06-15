@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.sql.*;
 
@@ -17,6 +18,21 @@ public class ForumCategory extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        String loginUrl = "/login_page";
+
+        HttpSession session = request.getSession();
+        if (session == null) {
+            System.out.println("Session is Null");
+            response.sendRedirect(loginUrl);
+        } else {
+            String loginTrue = (String) session.getAttribute("loginTrue");
+            loginTrue = (loginTrue == null) ? "false" : loginTrue;//rboykock (c)
+            if (!loginTrue.equals("true")) {
+                System.out.println("Session is false");
+                response.sendRedirect(loginUrl);
+            }
+        }
 
         ServletContext servletContext = getServletContext();
         String dbURL = (String) servletContext.getAttribute("dbEssURL");
@@ -96,7 +112,7 @@ public class ForumCategory extends HttpServlet {
 
             preparedStatement.setString(1, forumName);
             int i = preparedStatement.executeUpdate();
-            if(i!=0) {
+            if (i != 0) {
                 System.out.println("New Forum Create");
             }
 

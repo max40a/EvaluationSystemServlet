@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.sql.*;
 
@@ -31,6 +32,8 @@ public class LoginPage extends HttpServlet {
         String password = request.getParameter("password");
 
         if (login(userName, password)) {
+            HttpSession session = request.getSession(true);
+            session.setAttribute("loginTrue", new String("true"));
             response.sendRedirect("/forum_category");
         } else {
             sendLoginForm(response, true);
