@@ -86,4 +86,37 @@ public class Messages extends HttpServlet {
         }
     }
 
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ServletContext servletContext = getServletContext();
+        String dbURL = (String) servletContext.getAttribute("dbEssURL");
+
+        String message = request.getParameter("message");
+        Integer forumId = Integer.parseInt(request.getParameter("forumCategory"));
+
+        try(Connection connection = DriverManager.getConnection(
+                dbURL,
+                ConfigurationJDBC.USER_NAME,
+                ConfigurationJDBC.USER_PASSWORD)) {
+
+            String sql = "INSERT INTO messages VALUES (DEFAULT ,?, ?)";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, message);
+            preparedStatement.setInt(2, forumId);
+
+            int i = preparedStatement.executeUpdate();
+            if(i != 0)
+                System.out.println("Execute Update Successfully");
+
+            preparedStatement.close();
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        doGet(request,response);
+    }
+
 }
