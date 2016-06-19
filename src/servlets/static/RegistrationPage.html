@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Page</title>
+</head>
+<body>
+<center>
+    <h2>Registration Page.</h2>
+    ${errorMessage}
+    <hr>
+    Please enter your information :<br>
+    <form method="post">
+        <table>
+            <tr>
+                <td>First Name: &nbsp;</td>
+                <td><input type="text" name="firstName"></td>
+            </tr>
+            <tr>
+                <td>Last Name: &nbsp;</td>
+                <td><input type="text" name="lastName"></td>
+            </tr>
+            <tr>
+                <td>User Name: &nbsp;</td>
+                <td><input type="text" name="userName"></td>
+            </tr>
+            <tr>
+                <td>Password: &nbsp;</td>
+                <td><input type="text" name="password"></td>
+            </tr>
+            <tr>
+                <td><input type="reset"></td>
+                <td><input type="submit" value="Registration"></td>
+            </tr>
+        </table>
+    </form>
+    <br>
+    ${welcomeMessage}
+</center>
+</body>
+</html>
