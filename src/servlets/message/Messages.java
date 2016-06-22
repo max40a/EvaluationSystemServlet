@@ -51,7 +51,7 @@ public class Messages extends HttpServlet {
                 ConfigurationJDBC.USER_NAME,
                 ConfigurationJDBC.USER_PASSWORD)) {
 
-            String sql = "SELECT message FROM messages WHERE forum_id=?";
+            String sql = "SELECT message, time_stamp FROM messages WHERE forum_id=?";
 
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, forumID);
@@ -62,7 +62,8 @@ public class Messages extends HttpServlet {
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String message = "";
                 while (resultSet.next()) {
-                    message += "<li>" + resultSet.getString("message") + "</li><br>";
+                    message += "<li>" + resultSet.getString("message") + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+                            + resultSet.getString("time_stamp") + "</li><br>";
                 }
 
                 String html = "";
@@ -94,12 +95,12 @@ public class Messages extends HttpServlet {
         String message = request.getParameter("message");
         Integer forumId = Integer.parseInt(request.getParameter("forumCategory"));
 
-        try(Connection connection = DriverManager.getConnection(
+        try (Connection connection = DriverManager.getConnection(
                 dbURL,
                 ConfigurationJDBC.USER_NAME,
                 ConfigurationJDBC.USER_PASSWORD)) {
 
-            String sql = "INSERT INTO messages VALUES (DEFAULT ,?, ?)";
+            String sql = "INSERT INTO messages VALUES (DEFAULT ,?, ? , DEFAULT)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -107,16 +108,16 @@ public class Messages extends HttpServlet {
             preparedStatement.setInt(2, forumId);
 
             int i = preparedStatement.executeUpdate();
-            if(i != 0)
+            if (i != 0)
                 System.out.println("Execute Update Successfully");
 
             preparedStatement.close();
 
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        doGet(request,response);
+        doGet(request, response);
     }
 
 }
