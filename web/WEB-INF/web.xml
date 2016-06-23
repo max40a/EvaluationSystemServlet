@@ -49,5 +49,15 @@
         <servlet-name>RegistrationPage</servlet-name>
         <url-pattern>/registration_page</url-pattern>
     </servlet-mapping>
+    
+    <!-- SearchUser /search_user -->
+    <servlet>
+        <servlet-name>SearchUser</servlet-name>
+        <servlet-class>admin.SearchUser</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SearchUser</servlet-name>
+        <url-pattern>/search_user</url-pattern>
+    </servlet-mapping>
 
 </web-app>

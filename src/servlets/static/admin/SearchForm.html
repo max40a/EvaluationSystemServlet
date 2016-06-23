@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Form</title>
+</head>
+<body>
+<center>
+<h2>Search Form</h2>
+<br>Please enter the first name, last name or part of any.<br>
+<form method="post">
+    Name: <input type="text" name="keyword">
+    <input type="submit">
+    <br><hr><br>
+    Result search:
+    <br><table>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>User Name</th>
+            <th>Password</th>
+        </tr>
+    ${resultSearch}
+    </table>
+</form>
+</center>
+</body>
+</html>
