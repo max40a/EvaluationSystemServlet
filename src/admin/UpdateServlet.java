@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.sql.*;
 
@@ -22,11 +23,22 @@ public class UpdateServlet extends HttpServlet {
     String userName = "";
     String password = "";
 
-    String html = "";
-
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String loginUrl = "/login_page";
+
+        HttpSession session = request.getSession();
+        if (session == null) {
+            response.sendRedirect(loginUrl);
+        } else {
+            String loginTrue = (String) session.getAttribute("loginTrue");
+            loginTrue = (loginTrue == null) ? "false" : loginTrue;
+            if(!loginTrue.equals("true")) {
+                response.sendRedirect(loginUrl);
+            }
+        }
+
         sendUpdateForm(request, response);
     }
 
@@ -66,8 +78,9 @@ public class UpdateServlet extends HttpServlet {
 
         PrintWriter out = response.getWriter();
 
-        html = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(updateForm))) {
+            String html = "";
+
             int i;
             while ((i = reader.read()) != -1) {
                 html += (char) i;
@@ -110,7 +123,7 @@ public class UpdateServlet extends HttpServlet {
 
             int j = statement.executeUpdate();
             try (BufferedReader reader = new BufferedReader(new FileReader(updateForm))) {
-                html = "";
+                String html = "";
                 String references = "<a href=/search_user>Go Back</a> To Search Page";
 
                 int i;
@@ -120,15 +133,13 @@ public class UpdateServlet extends HttpServlet {
 
                 if (j == 1) {
                     html = html.replace("${resultMessage}", "Record Updating<br>" + references);
-                }
-                else
+                } else
                     html = html.replace("${resultMessage}", "Error Updating Record<br>" + references);
 
                 html = html.replace("${firstName}", firstName);
                 html = html.replace("${lastName}", lastName);
                 html = html.replace("${userName}", userName);
                 html = html.replace("${password}", password);
-                html = html.replace("${resultMessage}", "");
 
                 out.println(html);
             }
