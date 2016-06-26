@@ -1,7 +1,5 @@
 package servlets.message;
 
-import configurations.ConfigurationJDBC;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,7 +32,7 @@ public class Messages extends HttpServlet {
         }
 
         ServletContext servletContext = getServletContext();
-        String dbURL = (String) servletContext.getAttribute("dbEssURL");
+        Connection connection = (Connection) servletContext.getAttribute("connection");
 
         String forumId = request.getParameter("forumCategory");
         if (forumId == null) {
@@ -46,11 +44,7 @@ public class Messages extends HttpServlet {
 
         PrintWriter out = response.getWriter();
 
-        try (Connection connection = DriverManager.getConnection(
-                dbURL,
-                ConfigurationJDBC.USER_NAME,
-                ConfigurationJDBC.USER_PASSWORD)) {
-
+        try {
             String sql = "SELECT message, time_stamp FROM messages WHERE forum_id=?";
 
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -90,16 +84,12 @@ public class Messages extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ServletContext servletContext = getServletContext();
-        String dbURL = (String) servletContext.getAttribute("dbEssURL");
+        Connection connection = (Connection) servletContext.getAttribute("connection");
 
         String message = request.getParameter("message");
         Integer forumId = Integer.parseInt(request.getParameter("forumCategory"));
 
-        try (Connection connection = DriverManager.getConnection(
-                dbURL,
-                ConfigurationJDBC.USER_NAME,
-                ConfigurationJDBC.USER_PASSWORD)) {
-
+        try {
             String sql = "INSERT INTO messages VALUES (DEFAULT ,?, ? , DEFAULT)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -119,5 +109,4 @@ public class Messages extends HttpServlet {
 
         doGet(request, response);
     }
-
 }

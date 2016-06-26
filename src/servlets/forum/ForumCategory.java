@@ -1,7 +1,5 @@
 package servlets.forum;
 
-import configurations.ConfigurationJDBC;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,18 +33,13 @@ public class ForumCategory extends HttpServlet {
         }
 
         ServletContext servletContext = getServletContext();
-        String dbURL = (String) servletContext.getAttribute("dbEssURL");
+        Connection connection = (Connection) servletContext.getAttribute("connection");
 
         response.setContentType("text/html");
 
         PrintWriter out = response.getWriter();
 
-        try (Connection connection = DriverManager.getConnection(
-                dbURL,
-                ConfigurationJDBC.USER_NAME,
-                ConfigurationJDBC.USER_PASSWORD
-        )) {
-
+        try {
             String sql = "SELECT id, forum_category FROM forum_categories";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -72,6 +65,7 @@ public class ForumCategory extends HttpServlet {
 
                 out.println(html);
 
+                resultSet.close();
                 preparedStatement.close();
 
             } catch (FileNotFoundException exc) {
@@ -96,16 +90,11 @@ public class ForumCategory extends HttpServlet {
             throws ServletException, IOException {
 
         ServletContext servletContext = getServletContext();
-        String dbURL = (String) servletContext.getAttribute("dbEssURL");
+        Connection connection = (Connection) servletContext.getAttribute("connection");
 
         String forumName = request.getParameter("forumName");
 
-        try (Connection connection = DriverManager.getConnection(
-                dbURL,
-                ConfigurationJDBC.USER_NAME,
-                ConfigurationJDBC.USER_PASSWORD
-        )) {
-
+        try {
             String sql = "INSERT INTO forum_categories VALUES (DEFAULT , ?)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -122,6 +111,5 @@ public class ForumCategory extends HttpServlet {
         } catch (SQLException exc) {
             exc.printStackTrace();
         }
-
     }
 }

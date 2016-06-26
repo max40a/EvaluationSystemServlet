@@ -1,6 +1,4 @@
-package admin;
-
-import configurations.ConfigurationJDBC;
+package servlets.admin;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -49,15 +47,11 @@ public class SearchUser extends HttpServlet {
         String keyword = request.getParameter("keyword");
 
         ServletContext context = getServletContext();
-        String dbURL = (String) context.getAttribute("dbEssURL");
+        Connection connection = (Connection) context.getAttribute("connection");
 
         PrintWriter out = response.getWriter();
 
-        try (Connection connection = DriverManager.getConnection(
-                dbURL,
-                ConfigurationJDBC.USER_NAME,
-                ConfigurationJDBC.USER_PASSWORD)) {
-
+        try {
             String sql = "SELECT id, firstname, lastname, username, password FROM users WHERE firstname LIKE ? OR lastname LIKE ?";
 
             PreparedStatement statement = connection.prepareStatement(sql);

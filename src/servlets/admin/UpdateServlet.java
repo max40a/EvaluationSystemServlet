@@ -1,6 +1,4 @@
-package admin;
-
-import configurations.ConfigurationJDBC;
+package servlets.admin;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -34,7 +32,7 @@ public class UpdateServlet extends HttpServlet {
         } else {
             String loginTrue = (String) session.getAttribute("loginTrue");
             loginTrue = (loginTrue == null) ? "false" : loginTrue;
-            if(!loginTrue.equals("true")) {
+            if (!loginTrue.equals("true")) {
                 response.sendRedirect(loginUrl);
             }
         }
@@ -52,15 +50,11 @@ public class UpdateServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html");
         ServletContext context = getServletContext();
-        String dbURL = (String) context.getAttribute("dbEssURL");
+        Connection connection = (Connection) context.getAttribute("connection");
 
         String id = request.getParameter("id");
 
-        try (Connection connection = DriverManager.getConnection(
-                dbURL,
-                ConfigurationJDBC.USER_NAME,
-                ConfigurationJDBC.USER_PASSWORD
-        )) {
+        try {
             String sql = "SELECT firstname, lastname, username, password FROM users WHERE id=?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, id);
@@ -72,6 +66,9 @@ public class UpdateServlet extends HttpServlet {
                 userName = resultSet.getString(3);
                 password = resultSet.getString(4);
             }
+
+            resultSet.close();
+            statement.close();
         } catch (SQLException exc) {
             exc.printStackTrace();
         }
@@ -102,17 +99,14 @@ public class UpdateServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         ServletContext context = getServletContext();
-        String dbUrl = (String) context.getAttribute("dbEssURL");
+        Connection connection = (Connection) context.getAttribute("connection");
 
         String id = request.getParameter("id");
         firstName = request.getParameter("firstName");
         lastName = request.getParameter("lastName");
         password = request.getParameter("password");
 
-        try (Connection connection = DriverManager.getConnection(
-                dbUrl,
-                ConfigurationJDBC.USER_NAME,
-                ConfigurationJDBC.USER_PASSWORD)) {
+        try {
             String sql = "UPDATE users SET firstname=? , lastname=?, password=? WHERE id=?";
 
             PreparedStatement statement = connection.prepareStatement(sql);

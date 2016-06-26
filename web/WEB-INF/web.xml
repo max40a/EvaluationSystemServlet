@@ -53,7 +53,7 @@
     <!-- SearchUser /search_user -->
     <servlet>
         <servlet-name>SearchUser</servlet-name>
-        <servlet-class>admin.SearchUser</servlet-class>
+        <servlet-class>servlets.admin.SearchUser</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SearchUser</servlet-name>
@@ -63,7 +63,7 @@
     <!-- UpdateServlet /update -->
     <servlet>
         <servlet-name>UpdateServlet</servlet-name>
-        <servlet-class>admin.UpdateServlet</servlet-class>
+        <servlet-class>servlets.admin.UpdateServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UpdateServlet</servlet-name>

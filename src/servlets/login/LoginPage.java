@@ -1,7 +1,5 @@
 package servlets.login;
 
-import configurations.ConfigurationJDBC;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,9 +17,7 @@ public class LoginPage extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         sendLoginForm(response, false);
-
     }
 
     @Override
@@ -38,7 +34,6 @@ public class LoginPage extends HttpServlet {
         } else {
             sendLoginForm(response, true);
         }
-
     }
 
     private void sendLoginForm(HttpServletResponse response, boolean withErrorMessage)
@@ -70,19 +65,14 @@ public class LoginPage extends HttpServlet {
         } catch (FileNotFoundException exc) {
             exc.printStackTrace();
         }
-
     }
 
     public boolean login(String userName, String password) {
 
         ServletContext servletContext = getServletContext();
-        String dbURL = (String) servletContext.getAttribute("dbEssURL");
+        Connection connection = (Connection) servletContext.getAttribute("connection");
 
-        try (Connection connection = DriverManager.getConnection(
-                dbURL,
-                ConfigurationJDBC.USER_NAME,
-                ConfigurationJDBC.USER_PASSWORD)) {
-
+        try {
             String sql = "SELECT username FROM  users WHERE username=? AND password=?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -107,6 +97,4 @@ public class LoginPage extends HttpServlet {
 
         return false;
     }
-
-
 }

@@ -1,7 +1,5 @@
 package servlets.login;
 
-import configurations.ConfigurationJDBC;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -72,14 +70,9 @@ public class RegistrationServlet extends HttpServlet {
     boolean registration(String firstName, String lastName, String userName, String password)
             throws ServletException, IOException {
         ServletContext context = getServletContext();
-        String dbUrl = (String) context.getAttribute("dbEssURL");
+        Connection connection = (Connection) context.getAttribute("connection");
 
-        try (Connection connection = DriverManager.getConnection(
-                dbUrl,
-                ConfigurationJDBC.USER_NAME,
-                ConfigurationJDBC.USER_PASSWORD
-        )) {
-
+        try {
             String sqlInspect = "SELECT username FROM users WHERE username=?";
             PreparedStatement statementInspect = connection.prepareStatement(sqlInspect);
             statementInspect.setString(1, userName);
