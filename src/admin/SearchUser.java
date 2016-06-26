@@ -18,6 +18,7 @@ public class SearchUser extends HttpServlet {
 
     File searchForm = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\static\\admin\\SearchForm.html");
 
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String loginURL = "/login_page";
@@ -35,6 +36,7 @@ public class SearchUser extends HttpServlet {
         sendSearchPage(response);
     }
 
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         sendSearchResult(request, response);
@@ -42,7 +44,6 @@ public class SearchUser extends HttpServlet {
 
     public void sendSearchResult(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String id = "";
         String resultSearch = "";
 
         String keyword = request.getParameter("keyword");
@@ -66,12 +67,13 @@ public class SearchUser extends HttpServlet {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                id = resultSet.getString(1);
+                String id = resultSet.getString(1);
                 resultSearch +=
                         "<tr>" + "<td>" + resultSet.getString(2) + "</td>"
                                 + "<td>" + resultSet.getString(3) + "</td>"
                                 + "<td>" + resultSet.getString(4) + "</td>"
-                                + "<td>" + resultSet.getString(5) + "</td>" + "</tr>";
+                                + "<td>" + resultSet.getString(5) + "</td>"
+                                + "<td>" + "<a href=/update?id=" + id + ">Update</a></td>" + "</tr>";
             }
 
             try (BufferedReader reader = new BufferedReader(new FileReader(searchForm))) {

@@ -59,5 +59,15 @@
         <servlet-name>SearchUser</servlet-name>
         <url-pattern>/search_user</url-pattern>
     </servlet-mapping>
+    
+    <!-- UpdateServlet /update -->
+    <servlet>
+        <servlet-name>UpdateServlet</servlet-name>
+        <servlet-class>admin.UpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateServlet</servlet-name>
+        <url-pattern>/update</url-pattern>
+    </servlet-mapping>
 
 </web-app>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Updating Record</title>
+</head>
+<body>
+<center>
+    <br><h2>Update Form</h2>
+    <br>Please edit the first name, last name or password.<br>
+    <form method="post">
+        <table>
+            <tr>
+                <td>First Name</td>
+                <td><input type="text" name="firstName" value="${firstName}"></td>
+            </tr>
+            <tr>
+                <td>Last Name</td>
+                <td><input type="text" name="lastName" value="${lastName}"></td>
+            <tr>
+            <td>User Name</td>
+            <td>${userName}</td>
+            </tr>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="text" name="password" value="${password}"></td>
+            </tr>
+            <tr>
+                <td><input type="reset"></td>
+                <td><input type="submit" name="upload" value="Upload"></td>
+            </tr>
+        </table>
+    </form>
+    <hr>
+    <br>
+    ${resultMessage}
+</center>
+</body>
+</html>
