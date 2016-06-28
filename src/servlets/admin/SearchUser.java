@@ -67,7 +67,8 @@ public class SearchUser extends HttpServlet {
                                 + "<td>" + resultSet.getString(3) + "</td>"
                                 + "<td>" + resultSet.getString(4) + "</td>"
                                 + "<td>" + resultSet.getString(5) + "</td>"
-                                + "<td>" + "<a href=/update?id=" + id + ">Update</a></td>" + "</tr>";
+                                + "<td>" + "<a href=/update?id=" + id + ">Update</a></td>"
+                                + "<td>" + "<a href=/user_messages?id=" + id + ">Search Message</a>" + "</tr>";
             }
 
             try (BufferedReader reader = new BufferedReader(new FileReader(searchForm))) {

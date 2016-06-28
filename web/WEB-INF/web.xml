@@ -70,4 +70,14 @@
         <url-pattern>/update</url-pattern>
     </servlet-mapping>
 
+    <!--  SearchMessagesUser /user_messages -->
+    <servlet>
+        <servlet-name>SearchMessagesPerUser</servlet-name>
+        <servlet-class>servlets.admin.SearchMessagesUser</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SearchMessagesPerUser</servlet-name>
+        <url-pattern>/user_messages</url-pattern>
+    </servlet-mapping>
+
 </web-app>

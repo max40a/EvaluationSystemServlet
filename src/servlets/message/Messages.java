@@ -2,10 +2,7 @@ package servlets.message;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.*;
 import java.sql.*;
 
@@ -89,13 +86,25 @@ public class Messages extends HttpServlet {
         String message = request.getParameter("message");
         Integer forumId = Integer.parseInt(request.getParameter("forumCategory"));
 
+        Cookie[] cookies = request.getCookies();
+        String userID = "";
+
+        for (int i = 0; i < cookies.length; i++) {
+            Cookie cookie = cookies[i];
+            if(cookie.getName().equals("userID"))
+                userID = cookie.getValue();
+        }
+
+        Integer userId = Integer.parseInt(userID);
+
         try {
-            String sql = "INSERT INTO messages VALUES (DEFAULT ,?, ? , DEFAULT)";
+            String sql = "INSERT INTO messages VALUES (DEFAULT ,?, ? , DEFAULT, ?)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setString(1, message);
             preparedStatement.setInt(2, forumId);
+            preparedStatement.setInt(3, userId);
 
             int i = preparedStatement.executeUpdate();
             if (i != 0)

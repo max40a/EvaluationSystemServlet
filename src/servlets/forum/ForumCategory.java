@@ -2,10 +2,7 @@ package servlets.forum;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.*;
 import java.sql.*;
 
@@ -31,6 +28,18 @@ public class ForumCategory extends HttpServlet {
                 response.sendRedirect(loginUrl);
             }
         }
+
+        Cookie[] cookies = request.getCookies();
+        String userID = "";
+
+        for (int i = 0; i < cookies.length; i++) {
+            Cookie cookie = cookies[i];
+            if(cookie.getName().equals("userID"))
+                userID = cookie.getValue();
+        }
+
+        Cookie userCookieId = new Cookie("userID" ,userID);
+        response.addCookie(userCookieId);
 
         ServletContext servletContext = getServletContext();
         Connection connection = (Connection) servletContext.getAttribute("connection");

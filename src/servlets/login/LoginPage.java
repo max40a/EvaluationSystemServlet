@@ -2,10 +2,7 @@ package servlets.login;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.*;
 import java.sql.*;
 
@@ -13,6 +10,8 @@ import java.sql.*;
  * Created by Retro on 15.06.2016.
  */
 public class LoginPage extends HttpServlet {
+
+    File loginForm = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\static\\LoginPage.html");
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -27,7 +26,7 @@ public class LoginPage extends HttpServlet {
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
 
-        if (login(userName, password)) {
+        if (login(userName, password, response)) {
             HttpSession session = request.getSession(true);
             session.setAttribute("loginTrue", new String("true"));
             response.sendRedirect("/forum_category");
@@ -45,8 +44,6 @@ public class LoginPage extends HttpServlet {
         String html = "";
         String errorMessage = "Login Failed. Please try again.<br>";
 
-        File loginForm = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\static\\LoginPage.html");
-
         try (BufferedReader reader = new BufferedReader(new FileReader(loginForm))) {
 
             int i;
@@ -59,7 +56,6 @@ public class LoginPage extends HttpServlet {
             } else {
                 html = html.replace("${errorMessage}", "");
             }
-
             out.println(html);
 
         } catch (FileNotFoundException exc) {
@@ -67,13 +63,13 @@ public class LoginPage extends HttpServlet {
         }
     }
 
-    public boolean login(String userName, String password) {
+    public boolean login(String userName, String password, HttpServletResponse response) {
 
         ServletContext servletContext = getServletContext();
         Connection connection = (Connection) servletContext.getAttribute("connection");
 
         try {
-            String sql = "SELECT username FROM  users WHERE username=? AND password=?";
+            String sql = "SELECT username, id FROM  users WHERE username=? AND password=?";
 
             PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -83,8 +79,14 @@ public class LoginPage extends HttpServlet {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                resultSet.close();
-                statement.close();
+                String userId = "";
+                while (resultSet.next()) {
+                    userId = resultSet.getString(2);
+                }
+
+                Cookie userIdCookie = new Cookie("userID", userId);
+                response.addCookie(userIdCookie);
+
                 return true;
             }
 
