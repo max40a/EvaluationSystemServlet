@@ -79,5 +79,15 @@
         <servlet-name>SearchMessagesPerUser</servlet-name>
         <url-pattern>/user_messages</url-pattern>
     </servlet-mapping>
+    
+    <!-- WelcomePage /welcome -->
+    <servlet>
+        <servlet-name>WelcomePage</servlet-name>
+        <servlet-class>servlets.login.WelcomePage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WelcomePage</servlet-name>
+        <url-pattern>/welcome</url-pattern>
+    </servlet-mapping>
 
 </web-app>

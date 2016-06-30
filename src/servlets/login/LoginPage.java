@@ -29,7 +29,7 @@ public class LoginPage extends HttpServlet {
         if (login(userName, password, response)) {
             HttpSession session = request.getSession(true);
             session.setAttribute("loginTrue", new String("true"));
-            response.sendRedirect("/forum_category");
+            response.sendRedirect("/welcome");
         } else {
             sendLoginForm(response, true);
         }
@@ -79,13 +79,17 @@ public class LoginPage extends HttpServlet {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                String userId = "";
-                while (resultSet.next()) {
-                    userId = resultSet.getString(2);
-                }
+                String userId;
+                String userNameForCookie;
+
+                userNameForCookie= resultSet.getString(1);
+                userId = resultSet.getString(2);
 
                 Cookie userIdCookie = new Cookie("userID", userId);
                 response.addCookie(userIdCookie);
+
+                Cookie userNameCookie = new Cookie("userName", userNameForCookie);
+                response.addCookie(userNameCookie);
 
                 return true;
             }
