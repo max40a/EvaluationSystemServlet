@@ -79,11 +79,8 @@ public class LoginPage extends HttpServlet {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                String userId;
-                String userNameForCookie;
-
-                userNameForCookie= resultSet.getString(1);
-                userId = resultSet.getString(2);
+                String userNameForCookie = resultSet.getString(1);
+                String userId = resultSet.getString(2);
 
                 Cookie userIdCookie = new Cookie("userID", userId);
                 response.addCookie(userIdCookie);

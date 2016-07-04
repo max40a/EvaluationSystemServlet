@@ -8,9 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
-    <title>$Title$</title>
+    <title>Go To ESS</title>
   </head>
   <body>
-  $END$
+  <center>
+  <a href="/login_page">Go to Evaluation System.</a>
+  </center>
   </body>
 </html>

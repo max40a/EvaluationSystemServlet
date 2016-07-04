@@ -60,13 +60,13 @@
         <url-pattern>/search_user</url-pattern>
     </servlet-mapping>
     
-    <!-- UpdateServlet /update -->
+    <!-- UpdateUserServlet /update -->
     <servlet>
-        <servlet-name>UpdateServlet</servlet-name>
-        <servlet-class>servlets.admin.UpdateServlet</servlet-class>
+        <servlet-name>UpdateUserServlet</servlet-name>
+        <servlet-class>servlets.admin.UpdateUserServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UpdateServlet</servlet-name>
+        <servlet-name>UpdateUserServlet</servlet-name>
         <url-pattern>/update</url-pattern>
     </servlet-mapping>
 

@@ -12,7 +12,7 @@ import java.sql.*;
 /**
  * Created by Retro on 25.06.2016.
  */
-public class UpdateServlet extends HttpServlet {
+public class UpdateUserServlet extends HttpServlet {
 
     File updateForm = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\static\\admin\\UpdateForm.html");
 
