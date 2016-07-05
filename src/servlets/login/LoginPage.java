@@ -29,6 +29,7 @@ public class LoginPage extends HttpServlet {
         if (login(userName, password, response)) {
             HttpSession session = request.getSession(true);
             session.setAttribute("loginTrue", new String("true"));
+            session.setAttribute("userName", userName);
             response.sendRedirect("/welcome");
         } else {
             sendLoginForm(response, true);
@@ -79,14 +80,10 @@ public class LoginPage extends HttpServlet {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                String userNameForCookie = resultSet.getString(1);
                 String userId = resultSet.getString(2);
 
                 Cookie userIdCookie = new Cookie("userID", userId);
                 response.addCookie(userIdCookie);
-
-                Cookie userNameCookie = new Cookie("userName", userNameForCookie);
-                response.addCookie(userNameCookie);
 
                 return true;
             }

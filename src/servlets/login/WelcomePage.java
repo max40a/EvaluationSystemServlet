@@ -33,21 +33,15 @@ public class WelcomePage extends HttpServlet {
             }
         }
 
+        String userName = (String) session.getAttribute("userName");
+        if (userName == null) userName = "";
+
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
         File welcomePage = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\static\\WelcomePageForm.html");
 
         String html = "";
-
-        Cookie[] cookies = request.getCookies();
-        String userName = "";
-
-        for (int i = 0; i < cookies.length; i++) {
-            Cookie cookie = cookies[i];
-            if (cookie.getName().equals("userName"))
-                userName = cookie.getValue();
-        }
 
         ServletContext context = request.getServletContext();
         Connection connection = (Connection) context.getAttribute("connection");
@@ -65,14 +59,14 @@ public class WelcomePage extends HttpServlet {
                 admin = resultSet.getString(1);
             }
 
-            if(admin.equals("")) {
+            if (admin.equals("")) {
                 admin = "0";
             }
 
             Integer adminFlag = Integer.parseInt(admin);
 
             if (adminFlag == 1) {
-                adminLink =  "<a href=\"/search_user\">Search User</a>\n";
+                adminLink = "<a href=\"/search_user\">Search User</a>\n";
             }
 
         } catch (SQLException exc) {
