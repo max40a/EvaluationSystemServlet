@@ -65,7 +65,12 @@ public class WelcomePage extends HttpServlet {
                 admin = resultSet.getString(1);
             }
 
+            if(admin.equals("")) {
+                admin = "0";
+            }
+
             Integer adminFlag = Integer.parseInt(admin);
+
             if (adminFlag == 1) {
                 adminLink =  "<a href=\"/search_user\">Search User</a>\n";
             }
