@@ -1,0 +1,9 @@
+body {
+    background-color: aliceblue;
+    font-family: Serif;
+}
+
+h1 {
+    border-bottom: 2px solid black;
+    text-align: center;
+}
