@@ -5,8 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.sql.*;
 import java.util.*;
 
@@ -24,7 +23,7 @@ public class TestsService extends HttpServlet {
         Connection connection = (Connection) context.getAttribute("connection");
 
         try {
-            String sql = "SELECT `test-answer` FROM `tests-answer`";
+            String sql = "SELECT `test-answer` FROM `test-answers`";
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
 
@@ -65,12 +64,23 @@ public class TestsService extends HttpServlet {
     }
 
     private void compareAnswers(PrintWriter out) {
-        String firstPage = "Tests1/Test1.jsp";
-
-        if (testsResult.equals(answerListDb)) {
-            out.println("<br><b>You gave the correct answer</b><br><a href=" + firstPage + ">Try Again</a>");
-        } else {
-            out.println("<br><b>You make a mistake in answer</b><br><a href=" + firstPage + ">Try Again</a>");
+        File successFile = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\testsService\\static\\SuccessfulCompletion.html");
+        File unsuccessFile = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\testsService\\static\\Unsuccessful.html");
+        String html = "";
+        int i;
+        try (BufferedReader reader = new BufferedReader(new FileReader(successFile));
+             BufferedReader reader1 = new BufferedReader(new FileReader(unsuccessFile))) {
+            if (testsResult.equals(answerListDb)) {
+                while ((i = reader.read()) != -1)
+                    html += (char) i;
+                out.println(html);
+            } else {
+                while ((i = reader1.read()) != -1)
+                    html += (char) i;
+                out.println(html);
+            }
+        } catch (IOException exc) {
+            exc.printStackTrace();
         }
     }
 }
