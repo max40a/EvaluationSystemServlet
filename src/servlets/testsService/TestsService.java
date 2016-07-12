@@ -51,7 +51,8 @@ public class TestsService extends HttpServlet {
             String redirectAddress = request.getParameter("nextPage");
             response.sendRedirect(redirectAddress);
         } else if (testsResult.size() == answerListDb.size()) {
-            compareAnswers(out);
+            ArrayList<Integer> wrongAnswers = searchWrongAnswers();
+            compareAnswers(out, wrongAnswers);
             testsResult.clear();
         }
     }
@@ -63,7 +64,7 @@ public class TestsService extends HttpServlet {
         testsResult.add(valueInt);
     }
 
-    private void compareAnswers(PrintWriter out) {
+    private void compareAnswers(PrintWriter out, ArrayList wrongAnswers) {
         File successFile = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\testsService\\static\\SuccessfulCompletion.html");
         File unsuccessFile = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\testsService\\static\\Unsuccessful.html");
         String html = "";
@@ -71,16 +72,39 @@ public class TestsService extends HttpServlet {
         try (BufferedReader reader = new BufferedReader(new FileReader(successFile));
              BufferedReader reader1 = new BufferedReader(new FileReader(unsuccessFile))) {
             if (testsResult.equals(answerListDb)) {
-                while ((i = reader.read()) != -1)
+                while ((i = reader.read()) != -1) {
                     html += (char) i;
+                }
+                html = html.replace("${wrong}", "");
                 out.println(html);
             } else {
-                while ((i = reader1.read()) != -1)
+                while ((i = reader1.read()) != -1) {
                     html += (char) i;
+                }
+
+                StringBuffer stringBuffer = new StringBuffer();
+                for (int j = 0; j < wrongAnswers.size(); j++) {
+                    if (j == wrongAnswers.size() - 1) {
+                        stringBuffer.append(wrongAnswers.get(j));
+                    } else {
+                        stringBuffer.append(wrongAnswers.get(j) + ",");
+                    }
+                }
+
+                html = html.replace("${wrong}", stringBuffer.toString());
                 out.println(html);
             }
         } catch (IOException exc) {
             exc.printStackTrace();
         }
+    }
+
+    private ArrayList searchWrongAnswers() {
+        ArrayList<Integer> wrongAnswer = new ArrayList<>();
+        for (int i = 0; i < answerListDb.size(); i++) {
+            if (answerListDb.get(i) != testsResult.get(i))
+                wrongAnswer.add(i + 1);
+        }
+        return wrongAnswer;
     }
 }
