@@ -8,11 +8,11 @@
 <h1>Question 3</h1>
 <p>What class is the superclass for all classes</p>
 <form method="post" name="q3" action="/test-service">
-    <input type="radio" name="q3" value="1" checked>Class<br>
-    <input type="radio" name="q3" value="2">SuperClass<br>
-    <input type="radio" name="q3" value="3">GrandFather<br>
-    <input type="radio" name="q3" value="4">Object<br>
-    <input type="radio" name="q3" value="5">This class does not exist<br>
+    <input type="radio" name="q" value="1" checked>Class<br>
+    <input type="radio" name="q" value="2">SuperClass<br>
+    <input type="radio" name="q" value="3">GrandFather<br>
+    <input type="radio" name="q" value="4">Object<br>
+    <input type="radio" name="q" value="5">This class does not exist<br>
     <input type="submit" value="Send Answer">
 </form>
 </body>

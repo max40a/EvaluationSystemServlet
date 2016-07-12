@@ -15,8 +15,8 @@ import java.util.*;
  */
 public class TestsService extends HttpServlet {
 
-    LinkedList<Integer> testsResult = new LinkedList<>();
-    LinkedList<Integer> answerListDb = new LinkedList<>();
+    private LinkedList<Integer> testsResult = new LinkedList<>();
+    private LinkedList<Integer> answerListDb = new LinkedList<>();
 
     @Override
     public void init() throws ServletException {
@@ -43,30 +43,25 @@ public class TestsService extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
-        saveParameters(request, response);
+        saveParameters(request);
 
         System.out.println("doPost::AnswerListDb: " + answerListDb.toString());
         System.out.println("doPost::TestsResult: " + testsResult.toString());
 
         if (testsResult.size() < answerListDb.size()) {
-            String redirectAddress = request.getHeader("referer");
+            String redirectAddress = request.getParameter("nextPage");
             response.sendRedirect(redirectAddress);
         } else if (testsResult.size() == answerListDb.size()) {
             compareAnswers(out);
             testsResult.clear();
         }
-
     }
 
-    private void saveParameters(HttpServletRequest request, HttpServletResponse response)
+    private void saveParameters(HttpServletRequest request)
             throws ServletException, IOException {
-        Enumeration enumeration = request.getParameterNames();
-        while (enumeration.hasMoreElements()) {
-            String name = (String) enumeration.nextElement();
-            String value = request.getParameter(name);
-            Integer valueInt = Integer.parseInt(value);
-            testsResult.add(valueInt);
-        }
+        String name = request.getParameter("q");
+        Integer valueInt = Integer.parseInt(name);
+        testsResult.add(valueInt);
     }
 
     private void compareAnswers(PrintWriter out) {
