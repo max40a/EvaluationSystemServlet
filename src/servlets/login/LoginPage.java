@@ -5,6 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import java.io.*;
 import java.sql.*;
+import java.util.LinkedList;
 
 /**
  * Created by Retro on 15.06.2016.
@@ -23,6 +24,8 @@ public class LoginPage extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        LinkedList<Integer> testsResult = new LinkedList<>();
+
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
 
@@ -30,6 +33,7 @@ public class LoginPage extends HttpServlet {
             HttpSession session = request.getSession(true);
             session.setAttribute("loginTrue", new String("true"));
             session.setAttribute("userName", userName);
+            session.setAttribute("testsResult", testsResult);
             response.sendRedirect("/welcome");
         } else {
             sendLoginForm(response, true);

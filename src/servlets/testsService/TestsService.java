@@ -5,6 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
@@ -14,7 +15,7 @@ import java.util.*;
  */
 public class TestsService extends HttpServlet {
 
-    private LinkedList<Integer> testsResult = new LinkedList<>();
+    private LinkedList<Integer> testsResult;
     private LinkedList<Integer> answerListDb = new LinkedList<>();
 
     @Override
@@ -37,23 +38,38 @@ public class TestsService extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = searchSession(request, response);
+        if (session != null) {
+            response.sendRedirect("/welcome");
+        }
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
+        HttpSession session = searchSession(request, response);
+        if (session != null) {
 
-        saveParameters(request);
+            testsResult = (LinkedList<Integer>) session.getAttribute("testsResult");
 
-        System.out.println("doPost::AnswerListDb: " + answerListDb.toString());
-        System.out.println("doPost::TestsResult: " + testsResult.toString());
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
 
-        if (testsResult.size() < answerListDb.size()) {
-            String redirectAddress = request.getParameter("nextPage");
-            response.sendRedirect(redirectAddress);
-        } else if (testsResult.size() == answerListDb.size()) {
-            ArrayList<Integer> wrongAnswers = searchWrongAnswers();
-            compareAnswers(out, wrongAnswers);
-            testsResult.clear();
+            saveParameters(request);
+
+            System.out.println("doPost::AnswerListDb: " + answerListDb.toString());
+            System.out.println("doPost::TestsResult: " + testsResult.toString());
+
+            if (testsResult.size() < answerListDb.size()) {
+                String redirectAddress = request.getParameter("nextPage");
+                response.sendRedirect(redirectAddress);
+            } else if (testsResult.size() == answerListDb.size()) {
+                ArrayList<Integer> wrongAnswers = searchWrongAnswers();
+                compareAnswers(out, wrongAnswers);
+                testsResult.clear();
+            }
         }
     }
 
@@ -106,5 +122,26 @@ public class TestsService extends HttpServlet {
                 wrongAnswer.add(i + 1);
         }
         return wrongAnswer;
+    }
+
+    private HttpSession searchSession(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String loginUrl = "/login_page";
+
+        HttpSession session = request.getSession();
+        if (session == null) {
+            System.out.println("Session is Failed.");
+            response.sendRedirect(loginUrl);
+            return null;
+        } else {
+            String loginTrue = (String) session.getAttribute("loginTrue");
+            loginTrue = (loginTrue == null) ? "false" : loginTrue;//rboykock (c)
+            if (!loginTrue.equals("true")) {
+                System.out.println("Session is false");
+                response.sendRedirect(loginUrl);
+                return null;
+            }
+        }
+        return session;
     }
 }
