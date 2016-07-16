@@ -67,7 +67,8 @@ public class TestsService extends HttpServlet {
                 response.sendRedirect(redirectAddress);
             } else if (testsResult.size() == answerListDb.size()) {
                 ArrayList<Integer> wrongAnswers = searchWrongAnswers();
-                compareAnswers(out, wrongAnswers);
+                Integer currentGrade = getGrade(wrongAnswers);
+                compareAnswers(out, wrongAnswers, currentGrade);
                 testsResult.clear();
             }
         }
@@ -80,7 +81,7 @@ public class TestsService extends HttpServlet {
         testsResult.add(valueInt);
     }
 
-    private void compareAnswers(PrintWriter out, ArrayList wrongAnswers) {
+    private void compareAnswers(PrintWriter out, ArrayList wrongAnswers, Integer grade) {
         File successFile = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\testsService\\static\\SuccessfulCompletion.html");
         File unsuccessFile = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\testsService\\static\\Unsuccessful.html");
         String html = "";
@@ -92,6 +93,7 @@ public class TestsService extends HttpServlet {
                     html += (char) i;
                 }
                 html = html.replace("${wrong}", "");
+                html = html.replace("${grade}", grade.toString());
                 out.println(html);
             } else {
                 while ((i = reader1.read()) != -1) {
@@ -108,6 +110,7 @@ public class TestsService extends HttpServlet {
                 }
 
                 html = html.replace("${wrong}", stringBuffer.toString());
+                html = html.replace("${grade}", grade.toString());
                 out.println(html);
             }
         } catch (IOException exc) {
@@ -122,6 +125,10 @@ public class TestsService extends HttpServlet {
                 wrongAnswer.add(i + 1);
         }
         return wrongAnswer;
+    }
+
+    private int getGrade(ArrayList<Integer> wrongAnswer){
+        return  5-wrongAnswer.size();
     }
 
     private HttpSession searchSession(HttpServletRequest request, HttpServletResponse response)
