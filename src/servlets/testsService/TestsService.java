@@ -2,10 +2,7 @@ package servlets.testsService;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
@@ -57,7 +54,7 @@ public class TestsService extends HttpServlet {
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
 
-            saveParameters(request);
+            saveAnswer(request);
 
             System.out.println("doPost::AnswerListDb: " + answerListDb.toString());
             System.out.println("doPost::TestsResult: " + testsResult.toString());
@@ -67,14 +64,14 @@ public class TestsService extends HttpServlet {
                 response.sendRedirect(redirectAddress);
             } else if (testsResult.size() == answerListDb.size()) {
                 ArrayList<Integer> wrongAnswers = searchWrongAnswers();
-                Integer currentGrade = getGrade(wrongAnswers);
+                Integer currentGrade = getGrade(wrongAnswers, request);
                 compareAnswers(out, wrongAnswers, currentGrade);
                 testsResult.clear();
             }
         }
     }
 
-    private void saveParameters(HttpServletRequest request)
+    private void saveAnswer(HttpServletRequest request)
             throws ServletException, IOException {
         String name = request.getParameter("q");
         Integer valueInt = Integer.parseInt(name);
@@ -127,8 +124,43 @@ public class TestsService extends HttpServlet {
         return wrongAnswer;
     }
 
-    private int getGrade(ArrayList<Integer> wrongAnswer){
-        return  5-wrongAnswer.size();
+    private int getGrade(ArrayList<Integer> wrongAnswer, HttpServletRequest request)
+            throws ServletException {
+        int grade = 5 - wrongAnswer.size();
+
+        saveGrades(grade, request);
+
+        return grade;
+    }
+
+    private void saveGrades(Integer grade, HttpServletRequest request)
+            throws ServletException {
+        ServletContext context = getServletContext();
+        Connection connection1 = (Connection) context.getAttribute("connection");
+
+        String testIdS = request.getParameter("testId");
+        Cookie[] cookie = request.getCookies();
+        String userIdS = null;
+        for (Cookie c : cookie) {
+            if (c.getName().equals("userID"))
+                userIdS = c.getValue();
+        }
+        Integer userId = Integer.parseInt(userIdS);
+        int testId = Integer.parseInt(testIdS);
+
+        try {
+            String sql = "INSERT INTO `test-grades` VALUES (DEFAULT, ?, ?, ?, DEFAULT)";
+            PreparedStatement prepareStatement1 = connection1.prepareStatement(sql);
+
+            prepareStatement1.setInt(1, userId);
+            prepareStatement1.setInt(2, testId);
+            prepareStatement1.setInt(3, grade);
+
+            prepareStatement1.executeUpdate();
+            prepareStatement1.close();
+        } catch (SQLException exc) {
+            exc.printStackTrace();
+        }
     }
 
     private HttpSession searchSession(HttpServletRequest request, HttpServletResponse response)

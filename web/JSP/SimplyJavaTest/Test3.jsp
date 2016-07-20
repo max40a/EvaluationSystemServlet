@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    String testName = request.getParameter("testName");
+%>
 <html>
 <head>
     <title>Question 3</title>
@@ -8,7 +11,7 @@
 <h1>Question 3</h1>
 <p>What class is the superclass for all classes</p>
 <form method="post" name="q3" action="/test-service">
-    <input type="hidden" name="nextPage" value="Tests1/Test4.jsp">
+    <input type="hidden" name="nextPage" value="/JSP/SimplyJavaTest/Test4.jsp?testName=<%=testName%>">
     <input type="radio" name="q" value="1" checked>Class<br>
     <input type="radio" name="q" value="2">SuperClass<br>
     <input type="radio" name="q" value="3">GrandFather<br>

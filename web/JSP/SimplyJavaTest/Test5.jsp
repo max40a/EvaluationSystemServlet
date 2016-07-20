@@ -1,4 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<jsp:useBean id="dbBean" scope="page" class="servlets.testsService.testBean.TestBean"/>
+<%
+    String testName = request.getParameter("testName");
+    int testId = dbBean.getTestId(testName);
+%>
 <html>
 <head>
     <title>Question 5</title>
@@ -9,6 +14,7 @@
 <p>In Java it called a kind of cycle that allows to iterate over all the elements of the array,
     without using counter?</p>
 <form method="post" name="q5" action="/test-service">
+    <input type="hidden" name="testId" value="<%=testId%>">
     <input type="radio" name="q" value="1" checked>do-while<br>
     <input type="radio" name="q" value="2">while<br>
     <input type="radio" name="q" value="3">for<br>
