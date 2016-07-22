@@ -1,5 +1,7 @@
 package servlets.admin;
 
+import beans.SessionBean;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -14,31 +16,23 @@ public class SearchUser extends HttpServlet {
     File searchForm = new File("C:\\Users\\Retro\\Desktop\\IDEA_project\\EvaluationSystemServlets\\src\\servlets\\static\\admin\\SearchForm.html");
 
     String welcomeURL = "/welcome";
-    String loginURL = "/login_page";
+    HttpSession session;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
-        if (session == null) {
-            response.sendRedirect(loginURL);
-        } else {
-            String loginTrue = (String) session.getAttribute("loginTrue");
-            loginTrue = (loginTrue == null) ? "false" : loginTrue;
-            if (!loginTrue.equals("true"))
-                response.sendRedirect(loginURL);
-        }
-
-        sendSearchPage(response);
+        session = SessionBean.getSession(request, response);
+        doPost(request, response);
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        if (!adminDetect(request)) {
-            response.sendRedirect(welcomeURL);
+        if (session != null) {
+            if (!SessionBean.adminDetected(request))
+                response.sendRedirect(welcomeURL);
         }
 
         sendSearchResult(request, response);
@@ -67,12 +61,13 @@ public class SearchUser extends HttpServlet {
             while (resultSet.next()) {
                 String id = resultSet.getString(1);
                 resultSearch +=
-                        "<tr>" + "<td>" + resultSet.getString(2) + "</td>"
+                        "<tr class=\"row\">" + "<td>" + resultSet.getString(2) + "</td>"
                                 + "<td>" + resultSet.getString(3) + "</td>"
                                 + "<td>" + resultSet.getString(4) + "</td>"
                                 + "<td>" + resultSet.getString(5) + "</td>"
-                                + "<td>" + "<a href=/update?id=" + id + ">Update</a></td>"
-                                + "<td>" + "<a href=/user_messages?id=" + id + ">Search Message</a>" + "</tr>";
+                                + "<td>" + "<a href=/update?id=" + id + " class=\"button\">Update</a></td>"
+                                + "<td>" + "<a href=/user_messages?id=" + id + " class=\"button\">View Messages</a>"
+                                + "<td>" + "<a href=/JSP/AdminView/ShowUserGrades.jsp?userId=" + id + " class=\"button\">View Grades</a>" + "</tr>";
             }
 
             try (BufferedReader reader = new BufferedReader(new FileReader(searchForm))) {
@@ -93,64 +88,5 @@ public class SearchUser extends HttpServlet {
         } catch (SQLException exc) {
             exc.printStackTrace();
         }
-    }
-
-    private void sendSearchPage(HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(searchForm))) {
-            String html = "";
-            int i;
-            while ((i = reader.read()) != -1) {
-                html += (char) i;
-            }
-            html = html.replace("${resultSearch}", " ");
-
-            out.println(html);
-        }
-    }
-
-    boolean adminDetect(HttpServletRequest request)
-            throws IOException {
-
-        String userId = null;
-
-        Cookie[] cookies = request.getCookies();
-        for (int i = 0; i < cookies.length; i++) {
-            Cookie cookie = cookies[i];
-
-            if (cookie.getName().equals("userID")) {
-                userId = cookie.getValue();
-            }
-        }
-
-        ServletContext context = request.getServletContext();
-        Connection connection = (Connection) context.getAttribute("connection");
-
-        int id = Integer.parseInt(userId);
-
-        int adminFlag;
-        try {
-            String sql = "SELECT admin_flag FROM users WHERE id = ?";
-
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, id);
-
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next())
-                adminFlag = resultSet.getInt(1);
-            else
-                adminFlag = 0;
-
-            if (adminFlag == 0)
-                return false;
-
-        } catch (SQLException exc) {
-            exc.printStackTrace();
-        }
-
-        return true;
     }
 }
