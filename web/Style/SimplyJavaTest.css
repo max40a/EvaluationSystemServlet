@@ -1,9 +1,30 @@
-body {
-    background-color: aliceblue;
-    font-family: Serif;
+table.header{
+    width: 100%;
+    border-radius: 15px;
+    border-style: solid ;
+    border-color: aliceblue;
+    height: 75px;
+    background-color: rgb(18, 120, 118);
 }
 
-h1 {
-    border-bottom: 2px solid black;
+.header td{
     text-align: center;
+    font-family: Verdana;
+    font-size: 2em;
+}
+
+body{
+    background-color: aliceblue;
+    font-family: Verdana;
+}
+
+.button {
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    padding: .3em 1em;
+    border-radius: 6px;
+    background: rgb(18,120,118);
+    box-shadow: 0 -3px rgb(19, 167, 133) inset;
+    transition: 0.2s;
 }

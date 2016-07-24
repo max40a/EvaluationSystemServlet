@@ -39,7 +39,6 @@ public class TestsService extends HttpServlet {
             if(firstPage) {
                 getAnswerListDB(request);
                 testId = Integer.parseInt(request.getParameter("testId"));
-                System.out.println(testId);
             }
 
             response.setContentType("text/html");
@@ -58,6 +57,7 @@ public class TestsService extends HttpServlet {
                 Integer currentGrade = getGrade(wrongAnswers, request);
                 compareAnswers(out, wrongAnswers, currentGrade);
                 testsResult.clear();
+                answerListDb.clear();
             }
         }
     }
@@ -158,7 +158,6 @@ public class TestsService extends HttpServlet {
                 userIdS = c.getValue();
         }
         Integer userId = Integer.parseInt(userIdS);
-        System.out.println(testId);
 
         try {
             String sql = "INSERT INTO `test-grades` VALUES (DEFAULT, ?, ?, ?, DEFAULT)";

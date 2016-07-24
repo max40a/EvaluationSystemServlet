@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:useBean id="dbBean" scope="page" class="servlets.testsService.testBean.TestBean"/>
 <html>
 <head>
     <title>Question 5</title>
