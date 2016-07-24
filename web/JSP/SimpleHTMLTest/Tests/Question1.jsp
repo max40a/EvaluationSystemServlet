@@ -14,6 +14,7 @@
 <p>1. What is indicated by the tag paragraph in HTML ?</p>
 <form method="post" name="q1" action="/test-service">
     <input type="hidden" name="nextPage" value="JSP/SimpleHTMLTest/Tests/Question2.jsp">
+    <input type="hidden" name="returnPage" value="JSP/SimpleHTMLTest/Tests/Question1.jsp?testName=simply-HTML">
     <input type="hidden" name="testId" value="<%=testId%>">
     <input type="hidden" name="firstPage" value="true">
     <input type="radio" name="q" value="1" checked>&lt;em&gt;<br>

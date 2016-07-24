@@ -15,6 +15,7 @@
 <p>As primitive types available in Java?</p>
 <form method="post" name="q1" action="/test-service">
     <input type="hidden" name="nextPage" value="JSP/SimplyJavaTest/Test2.jsp">
+    <input type="hidden" name="returnPage" value="JSP/SimplyJavaTest/Test1.jsp?testName=simply-java"">
     <input type="hidden" name="testId" value="<%=testId%>">
     <input type="hidden" name="firstPage" value="true">
     <input type="radio" name="q" value="1" checked>5<br>

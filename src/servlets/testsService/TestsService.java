@@ -15,7 +15,8 @@ public class TestsService extends HttpServlet {
     private LinkedList<Integer> testsResult;
     private LinkedList<Integer> answerListDb = new LinkedList<>();
 
-    Integer testId;
+    private Integer testId;
+    private String returnPage;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -39,6 +40,7 @@ public class TestsService extends HttpServlet {
             if(firstPage) {
                 getAnswerListDB(request);
                 testId = Integer.parseInt(request.getParameter("testId"));
+                returnPage = request.getParameter("returnPage");
             }
 
             response.setContentType("text/html");
@@ -56,8 +58,8 @@ public class TestsService extends HttpServlet {
                 ArrayList<Integer> wrongAnswers = searchWrongAnswers();
                 Integer currentGrade = getGrade(wrongAnswers, request);
                 compareAnswers(out, wrongAnswers, currentGrade);
-                testsResult.clear();
                 answerListDb.clear();
+                testsResult.clear();
             }
         }
     }
@@ -104,6 +106,7 @@ public class TestsService extends HttpServlet {
                 }
                 html = html.replace("${wrong}", "");
                 html = html.replace("${grade}", grade.toString());
+                html = html.replace("${returnPage}", returnPage);
                 out.println(html);
             } else {
                 while ((i = reader1.read()) != -1) {
@@ -121,6 +124,7 @@ public class TestsService extends HttpServlet {
 
                 html = html.replace("${wrong}", stringBuffer.toString());
                 html = html.replace("${grade}", grade.toString());
+                html = html.replace("${returnPage}", returnPage);
                 out.println(html);
             }
         } catch (IOException exc) {
