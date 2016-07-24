@@ -1,5 +1,7 @@
 package servlets.testsService;
 
+import servlets.testsService.testBean.TestBean;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -37,7 +39,7 @@ public class TestsService extends HttpServlet {
 
             boolean firstPage = Boolean.parseBoolean(request.getParameter("firstPage"));
 
-            if(firstPage) {
+            if (firstPage) {
                 getAnswerListDB(request);
                 testId = Integer.parseInt(request.getParameter("testId"));
                 returnPage = request.getParameter("returnPage");
@@ -143,7 +145,12 @@ public class TestsService extends HttpServlet {
 
     private int getGrade(ArrayList<Integer> wrongAnswer, HttpServletRequest request)
             throws ServletException {
-        int grade = 5 - wrongAnswer.size();
+
+        int w = wrongAnswer.size();
+        int a = answerListDb.size();
+
+        int grade  = TestBean.gradeMake(w,a);
+        System.out.println("grade=" + grade);
 
         saveGrades(grade, request);
 

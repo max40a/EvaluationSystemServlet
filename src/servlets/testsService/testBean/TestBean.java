@@ -32,4 +32,30 @@ public class TestBean {
 
         return testId;
     }
+
+    public static int gradeMake(int w, int a) {
+        int grade;
+
+        Double wrong = Double.valueOf(w);
+        Double all = Double.valueOf(a);
+
+        double rate = (wrong / all) * 100;
+        System.out.println(rate);
+
+        if (rate == 0.0) {
+            grade = 5;
+        } else if (rate == 100) {
+            grade = 0;
+        } else if (rate > 0.0 & rate <= 20.0) {
+            grade = 4;
+        } else if (rate > 20.0 & rate <= 40.0) {
+            grade = 3;
+        } else if (rate > 40.0 & rate <= 60.0) {
+            grade = 2;
+        } else {
+            grade = 1;
+        }
+
+        return grade;
+    }
 }
