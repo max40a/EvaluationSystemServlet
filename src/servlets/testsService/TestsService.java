@@ -15,24 +15,7 @@ public class TestsService extends HttpServlet {
     private LinkedList<Integer> testsResult;
     private LinkedList<Integer> answerListDb = new LinkedList<>();
 
-    @Override
-    public void init() throws ServletException {
-        ServletContext context = getServletContext();
-        Connection connection = (Connection) context.getAttribute("connection");
-
-        try {
-            String sql = "SELECT `test-answer` FROM `test-answers`";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                Integer answerDb = resultSet.getInt(1);
-                answerListDb.add(answerDb);
-            }
-        } catch (SQLException exc) {
-            exc.printStackTrace();
-        }
-    }
+    Integer testId;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -51,6 +34,14 @@ public class TestsService extends HttpServlet {
 
             testsResult = (LinkedList<Integer>) session.getAttribute("testsResult");
 
+            boolean firstPage = Boolean.parseBoolean(request.getParameter("firstPage"));
+
+            if(firstPage) {
+                getAnswerListDB(request);
+                testId = Integer.parseInt(request.getParameter("testId"));
+                System.out.println(testId);
+            }
+
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
 
@@ -68,6 +59,28 @@ public class TestsService extends HttpServlet {
                 compareAnswers(out, wrongAnswers, currentGrade);
                 testsResult.clear();
             }
+        }
+    }
+
+    private void getAnswerListDB(HttpServletRequest request)
+            throws ServletException {
+        Integer testId = Integer.parseInt(request.getParameter("testId"));
+
+        ServletContext context = getServletContext();
+        Connection connection = (Connection) context.getAttribute("connection");
+
+        try {
+            String sql = "SELECT `test-answer` FROM `test-answers` WHERE testId = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, testId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Integer answerDb = resultSet.getInt(1);
+                answerListDb.add(answerDb);
+            }
+        } catch (SQLException exc) {
+            exc.printStackTrace();
         }
     }
 
@@ -138,7 +151,6 @@ public class TestsService extends HttpServlet {
         ServletContext context = getServletContext();
         Connection connection1 = (Connection) context.getAttribute("connection");
 
-        String testIdS = request.getParameter("testId");
         Cookie[] cookie = request.getCookies();
         String userIdS = null;
         for (Cookie c : cookie) {
@@ -146,7 +158,7 @@ public class TestsService extends HttpServlet {
                 userIdS = c.getValue();
         }
         Integer userId = Integer.parseInt(userIdS);
-        int testId = Integer.parseInt(testIdS);
+        System.out.println(testId);
 
         try {
             String sql = "INSERT INTO `test-grades` VALUES (DEFAULT, ?, ?, ?, DEFAULT)";

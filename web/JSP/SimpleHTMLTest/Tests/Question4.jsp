@@ -1,7 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    String testName = request.getParameter("testName");
-%>
 <html>
 <head>
     <title>Question 4</title>
@@ -10,8 +7,9 @@
 <body>
 <jsp:include page="../Header.jsp" flush="true"/>
 <p>4. What character is given a link to the current document ? </p>
-<form method="post" name="q2" action="/test-service">
-    <input type="hidden" name="nextPage" value="JSP/SimpleHTMLTest/Tests/Question5.jsp?testName=<%=testName%>">
+<form method="post" name="q4" action="/test-service">
+    <input type="hidden" name="nextPage" value="JSP/SimpleHTMLTest/Tests/Question5.jsp">
+    <input type="hidden" name="firstPage" value="false">
     <input type="radio" name="q" value="1" checked>#<br>
     <input type="radio" name="q" value="2">&amp;<br>
     <input type="radio" name="q" value="3">&bull;<br>
