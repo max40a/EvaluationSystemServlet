@@ -46,11 +46,11 @@ public class TestBean {
             grade = 5;
         } else if (rate == 100) {
             grade = 0;
-        } else if (rate > 0.0 & rate <= 20.0) {
+        } else if (rate > 0.0 & rate <= 25.0) {
             grade = 4;
-        } else if (rate > 20.0 & rate <= 40.0) {
+        } else if (rate > 25.0 & rate <= 50.0) {
             grade = 3;
-        } else if (rate > 40.0 & rate <= 60.0) {
+        } else if (rate > 50.0 & rate <= 75.0) {
             grade = 2;
         } else {
             grade = 1;

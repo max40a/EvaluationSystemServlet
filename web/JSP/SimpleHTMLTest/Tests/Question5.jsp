@@ -6,8 +6,9 @@
 </head>
 <body>
 <jsp:include page="../Header.jsp" flush="true"/>
-<p>5. Which element is used to define a logical separation of content on the page or elements </p>
+<p>5. Which element is used to define a logical separation of content on the page or elements?</p>
 <form method="post" name="q5" action="/test-service">
+    <input type="hidden" name="nextPage" value="JSP/SimpleHTMLTest/Tests/Question6.jsp">
     <input type="hidden" name="firstPage" value="false">
     <input type="radio" name="q" value="1" checked>div<br>
     <input type="radio" name="q" value="2">span<br>
