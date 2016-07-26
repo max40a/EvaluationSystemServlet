@@ -1,15 +1,16 @@
-<%@ page import="configurations.ConfigurationJDBC" %>
-<%@ page import="java.sql.*" %>
+<%@ page import="javax.sql.rowset.CachedRowSet" %>
+<%@ page import="java.sql.ResultSetMetaData" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="sessinBean" scope="page" class="beans.SessionBean"/>
+<jsp:useBean id="dbBean" scope="page" class="servlets.testsService.testBean.TestBean"/>
 <%!
     HttpSession session = null;
     String welcomeURL = "/welcome";
 %>
 <%
     session = sessinBean.getSession(request, response);
-    if(session != null) {
-        if(!sessinBean.adminDetected(request))
+    if (session != null) {
+        if (!sessinBean.adminDetected(request))
             response.sendRedirect(welcomeURL);
     }
 
@@ -31,56 +32,38 @@
 </head>
 <body>
 <center>
-<h1>Tests results:</h1>
-<%
-    Connection connection = DriverManager.getConnection(
-            ConfigurationJDBC.DB_ESS_URL,
-            ConfigurationJDBC.USER_NAME,
-            ConfigurationJDBC.USER_PASSWORD);
-
-    String sql = "SELECT users.username,tests.testName ,`test-grades`.grade, `test-grades`.`time-stamp`"
-            + "FROM `test-grades` INNER JOIN users ON `test-grades`.userId = users.id "
-            + "INNER JOIN tests ON `test-grades`.testId = tests.id "
-            + "WHERE users.id = ?";
-
-    PreparedStatement statement = connection.prepareStatement(sql);
-    statement.setInt(1, userId);
-
-    ResultSet resultSet = statement.executeQuery();
-
-    ResultSetMetaData metaData = resultSet.getMetaData();
-    int columnCount = metaData.getColumnCount();
-%>
-<table border="1">
-    <tr><%
-        for (int i = 1; i <= columnCount; i++) {
-    %>
-        <td><b><%=metaData.getColumnName(i)%>
-        </b></td>
-        <%
-            }
-        %>
-    </tr>
+    <h1>Tests results:</h1>
     <%
-        while (resultSet.next()) {
+        CachedRowSet cachedRowSet = dbBean.getUserGrades(userId);
+        ResultSetMetaData metaData = cachedRowSet.getMetaData();
+
+        int columnCount = metaData.getColumnCount();
     %>
-    <tr>
-        <%
+    <table border="1">
+        <tr><%
             for (int i = 1; i <= columnCount; i++) {
         %>
-        <td><%=resultSet.getString(i)%>
-        </td>
-        <%
+            <td><b><%=metaData.getColumnName(i)%>
+            </b></td>
+            <%
                 }
-            }
+            %>
+        </tr>
+        <%
+            while (cachedRowSet.next()) {
         %>
-    </tr>
-</table>
-<%
-    resultSet.close();
-    statement.close();
-    connection.close();
-%>
+        <tr>
+            <%
+                for (int i = 1; i <= columnCount; i++) {
+            %>
+            <td><%=cachedRowSet.getString(i)%>
+            </td>
+            <%
+                    }
+                }
+            %>
+        </tr>
+    </table>
 </center>
 </body>
 </html>
